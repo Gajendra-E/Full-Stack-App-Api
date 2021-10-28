@@ -1,0 +1,26 @@
+{
+  "development": {
+      "username": "root",
+      "password": "password",
+      "database":  "fullstack_app_api_db",
+      "host": "127.0.0.1",
+      "dialect": "mysql",
+      "logging": false
+  },
+  "test": {
+      "username": "root",
+      "password": "password",
+      "database":  "fullstack_app_api_db",
+      "host": "127.0.0.1",
+      "dialect": "mysql",
+      "logging": false
+  },
+  "production": {
+      "username": "root",
+      "password": "password",
+      "database":  "fullstack_app_api_db",
+      "host": "127.0.0.1",
+      "dialect": "mysql",
+      "logging": false
+  }
+}

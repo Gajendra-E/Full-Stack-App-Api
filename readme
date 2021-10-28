@@ -1,0 +1,120 @@
+Create Application Using Express:
+==================================
+1. install express globally
+     > npm install -g express-generator
+
+2. create project
+     > express fullstack-app-api --no-view
+
+3. install dependencies:
+     > npm install
+
+4. run the app:
+     > npm start
+
+
+Set up Babel Transpiler
+========================
+    1.  npm install --save-dev babel-preset-env
+    2.  npm install --save-dev babel-cli babel-preset-es2015 babel-preset-stage-2 babel-plugin-transform-runtime
+    3.  Create a babelrc file using 
+        > touch .babelrc
+    4.  Include the following code     
+            > {
+                "presets": [
+                    ["env", {
+                        "targets": {
+                        "node": "current"
+                        }
+                    }]
+                ],
+                "plugins": [
+                    ["transform-runtime", {
+                        "polyfill": false,
+                        "regenerator": true
+                    }]
+                    ]
+                }
+
+    5.  Install rimraf to delete  the dist folder if exist.
+        > npm install rimraf
+    6.  Change the "scripts" object in package.json file as below
+        "scripts": {
+            "start": "nodemon ./bin/www --exec babel-node",
+            "build": "rimraf dist/ && babel ./ -d dist --ignore node_modules,.babelrc,package.json,package-lock.json,npm-debug.log --copy-files"
+        }
+    7.  The above build command will delete 'dist' folder if exists. And it will transpile all the es6 js files to es5 and will put it under dist folder.
+        > npm run build
+		
+Set up Database
+===============
+    1.  http://docs.sequelizejs.com/manual/tutorial/migrations.html
+    2.  > npm install --save sequelize           //To install sequelize
+    3.  > npm install --save sequelize-cli       //To install command line interface for sequelize
+    4.  > cd src
+    5.  > npx sequelize-cli init   //To get the models, migrations, seeders, config folders. If it was already there, then we don't need to execute it.
+    6.  http://docs.sequelizejs.com/manual/tutorial/upgrade-to-v4.html
+    7.  Create .sequelizerc configuration file using the following command
+    8.  > cd ..
+	    > touch .sequelizerc
+    9.  Configure your models, migrations, seeders and config folders path in .sequelizerc file as follows
+    10. const path = require('path');
+        module.exports = {
+            'config': path.resolve('./src/config', 'config.json'),
+            'models-path': path.resolve('./src', 'models'),
+            'seeders-path': path.resolve('./src', 'seeders'),
+            'migrations-path': path.resolve('./src', 'migrations')
+        }
+    11. In config.json file, we need to add '"operatorsAliases": false' in order to remove the error - "sequelize deprecated String based operators are now deprecated. Please use Symbol based operators for better security"
+
+Alter config.json file
+=========================
+    1.  Need to alter the config.json file under ./src/config folder like below
+    2.  {
+            "development": {
+                "username": "root",
+                "password": "password",
+                "database":  "full_stack_app_db",
+                "host": "127.0.0.1",
+                "dialect": "mysql",
+                "logging": false
+            },
+            "test": {
+                "username": "root",
+                "password": "password",
+                "database":  "full_stack_app_db",
+                "host": "127.0.0.1",
+                "dialect": "mysql",
+                "logging": false
+            },
+            "production": {
+                "username": "root",
+                "password": "password",
+                "database":  "full_stack_app_db",
+                "host": "127.0.0.1",
+                "dialect": "mysql",
+                "logging": false
+            }
+        }
+
+Execute command to add model files
+====================================
+ 1. Users Table:
+    npx sequelize-cli model:generate --name User --attributes email:string,salt:string,hashed_password:string,status:string
+ 2. Roles Table:
+    npx sequelize-cli model:generate --name Role --attributes name:string,code:string,status:string
+ 3. UserRoles Table:
+    npx sequelize-cli model:generate --name UserRole --attributes role_id:integer,user_id:integer,status:string
+ 4. UserProfiles Table:
+    npx sequelize-cli model:generate --name UserProfile --attributes user_id:integer,first_name:string,last_name:string,email:string,date_of_birth:date,gender:string,status:string
+5.  SiteVisitRequest Table:
+    npx sequelize-cli model:generate --name SiteVisitRequest --attributes name:string,company_name:string,date:date,time:time,status:string
+ 
+
+To run the application
+====================================
+    1.  > npx sequelize-cli db:create
+    2.  > npx sequelize-cli db:migrate
+    3.  > npm run build 
+    4.  > node ./dist/data/loadData.js master ./dist/data/full_stack_app.xlsx 
+    5.  > npm start  
